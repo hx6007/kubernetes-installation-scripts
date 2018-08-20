@@ -7,7 +7,7 @@ git clone https://github.com/wise2ck8s/kubernetes-installation-scripts
 scp -pr kubernetes-installation-scripts k8s01:/root/
 ```
 
-## On the first master node
+## On the first master node set kube-proxy and coredns
 ```
 cd /root/kubernetes-installation-scripts/
 export KUBE_APISERVER=https://192.168.9.100:6443
@@ -15,4 +15,13 @@ for file in $(ls addons/kube-proxy/); do sed -i 's/\${KUBE_APISERVER}/${KUBE_API
 kubectl create -f addons/kube-proxy/
 kubectl create -f addons/coredns/
 kubectl -n kube-system get pods -l k8s-app=kube-proxy -o wide
+```
+
+## Flannel Network
+
+```
+curl -L -o kube-flannel-legacy.yaml https://raw.githubusercontent.com/coreos/flannel/master/Documentation/k8s-manifests/kube-flannel-legacy.yml
+curl -L -o kube-flannel-rbac.yaml https://raw.githubusercontent.com/coreos/flannel/master/Documentation/k8s-manifests/kube-flannel-rbac.yml
+kubectl create -f kube-flannel-rabc.yaml
+kubectl create -f kube-flannel-legacy.yaml
 ```
